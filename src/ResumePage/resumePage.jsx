@@ -6,8 +6,9 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 
 const ResumePage = ()=>{
     return (
+        <>
+        <Header/>
        <div className="resume-page mt-36">
-            <Header/>
             <div className="resume-cont flex flex-col gap items-center">
                 <div className="cv">
                     <div className="template" style={{ height: '1000px', backgroundColor: '#1A1821' , width: '660px'}}>
@@ -23,6 +24,7 @@ const ResumePage = ()=>{
             </div>
             <Footer/>
         </div> 
+        </>
     )
 }
 
