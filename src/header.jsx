@@ -15,7 +15,7 @@ const Header = ()=>{
             }
             
             listRef.current.classList.remove('collapse');
-            listRef.current.style.height = '15rem';
+            listRef.current.style.height = '14rem';
             toggle = true;
         }
         else {
@@ -48,10 +48,10 @@ const Header = ()=>{
     }, []);
 
     return (
-        <div ref={headerRef} className="header relative small-screen-nav md:medium-screen-nav">
+        <div ref={headerRef} className="header small-screen-nav py-2 md:medium-screen-nav">
           <div className="flex px-10 sm:px-28 w-full justify-between items-center md:py-3 md:px-10">
           <Link to="/"><div className="header-left">
-                    <p className="text-3xl text-white font-semibold km">Km.</p>
+                    <p className="text-3xl font-semibold km">Km.</p>
                 </div></Link>
                 <div className="header-right hidden items-center md:flex flex justify-around gap-3 w-3/5">
                 <Link to="/"><div className="home underlined flex items-center gap-2">
@@ -83,7 +83,7 @@ const Header = ()=>{
                     <span></span>
                 </button>
           </div>
-          <div className="ease-in-out duration-300 nav-list absolute w-full">
+          <div className="ease-in-out duration-300 nav-list w-full">
             <div ref={listRef} className="navbar-collapse overflow-hidden collapse show" id="responsive-navbar-nav">
                 <div className="navbar-nav flex flex-col gap-4">
                 <Link to="/"><div className="nav-item flex justify-center">
