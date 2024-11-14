@@ -349,6 +349,10 @@ footer .links a {
   border-radius: 5px;
 }
 
+.search button {
+  padding: 0.5rem 1rem !important;
+}
+
 .resume-cont a:hover {
   cursor: pointer;
   border: 1px solid white;
