@@ -53,7 +53,7 @@ import trello from '../assets/images/trello.PNG';
 import bank from '../assets/images/bank.PNG';
 import loremgen from '../assets/images/loremgen.PNG';
 import geekfoods from '../assets/images/geekfoods.PNG';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const Projects = ()=> {
     let card = [{
@@ -476,19 +476,55 @@ const Projects = ()=> {
 
     const [query, setQuery] = useState('all');
     const [active,setActive] = useState('all')
-    const [inp,setInp] = useState('')
-    const cardElements = card.filter(card=>{
-        if(query=='all') {
-            return true;
+    const [inp,setInp] = useState('');
+    const inpRef = useRef(null);
+    const [projects, setProjects] = useState([]);
+    const [value, setValue] = useState(0);
+    const [total, setTotal] = useState(0);
+    const displayProjects = (msg='')=>{
+        const cardElements = card.filter(card=>{
+            if(query=='all') {
+                return true;
+            }
+            if(query=='html' || query=='css') 
+            {
+                return card.category == query;
+            }
+            return card.name.toLowerCase().includes(query.toLowerCase()) || card.category == query || card.description.toLowerCase().includes(query);
+            });
+            setTotal(cardElements.length);
+            let arr = [];
+            for(let i = value; i < cardElements.length; i++) {
+                if(i%5==0 && i != 0 && value != i) {
+                    setValue(i);
+                    break;
+                }
+                arr.push(<ProjectCard key={i} {...cardElements[i]} />);      
+            }
+            if(msg !='') {
+              setProjects([...projects,...arr]);  
+              return
+            }
+            setProjects([...arr]);
         }
-        if(query=='html' || query=='css') 
-        {
-            return card.category == query;
+
+    useEffect(()=>{
+        setValue(0); 
+        setTotal(0);
+    },[query]);
+
+    useEffect(()=>{
+        if(value == 0) {
+            displayProjects();
         }
-        return card.name.toLowerCase().includes(query.toLowerCase()) || card.category == query || card.description.toLowerCase().includes(query);
-    }).map((card,idx)=>{
-           return <ProjectCard key={idx} {...card} />
-    })
+    },[value]);
+
+    useEffect(()=>{
+        if(projects.length < 5) {
+            setValue(5);
+        }
+    },[projects]);
+
     return (
         <div className="projects">
             <Header />
@@ -500,15 +536,25 @@ const Projects = ()=> {
                     <p onClick={()=>{setQuery('html');setActive('html')}} className={`cursor-pointer ${active=='html'?'active':""}`}>html</p>
                     <p onClick={()=>{setQuery('css');setActive('css')}} className={`cursor-pointer ${active=='css'?'active':""}`}>css</p>
                     <p onClick={()=>{setQuery('javascript');setActive('javascript')}} className={`cursor-pointer ${active=='javascript'?'active':""}`}>Javascript</p>
-                    <p onClick={()=>{setQuery('react');setActive('react')}} className={`cursor-pointer ${active=='react'?'active':""}`}>React</p>
+                    <p onClick={()=>{setQuery('react');console.log('test',value);
+                    ;setActive('react')}} className={`cursor-pointer ${active=='react'?'active':""}`}>React</p>
                 </div>
                 <div className="search mb-14">
-                    <input onKeyUp={(e)=>{if(e.key=='Enter'){setQuery(e.target.value)}setInp(e.target.value)}} className='py-1 px-4 rounded-s-md' type="text" placeholder='Search by name or category...' />
-                    <button onClick={(e)=>setQuery(inp)} className='text-white text-sm rounded-r-md'>Search</button>
+                    <input ref={inpRef} onKeyUp={(e)=>{if(e.key=='Enter'){setQuery(e.target.value);inpRef.current.value=''}setInp(e.target.value)}} className='py-1 px-4 rounded-s-md' type="text" placeholder='Search by name or category...' />
+                    <button onClick={(e)=>{setQuery(inp);inpRef.current.value=''}} className='text-white text-sm rounded-r-md'>Search</button>
                 </div>
-                <div className="projects-card flex gap-y-10 gap-x-2 justify-around flex-wrap">
-                    {cardElements.length==0?<div className='text-white text-md md:text-xl font-medium lg:text-2xl'>No Project by <span className='km'>{query}</span> name is available!</div>:cardElements}
+                <div className="projects-cont">
+                    <div className="projects-card grid justify-items-center md:grid-cols-2 gap-y-10 gap-x-20 lg:grid-cols-2 xl:grid-cols-3">
+                        {projects.length==0?<div className='text-white col-span-4 text-md md:text-xl font-medium lg:text-2xl'>No Project by <span className='km'>{query}</span> name is available!</div>:projects}
+                    </div>
                 </div>
+                
+                <>
+                <div className="loadmorebtn flex justify-center">
+                    <button onClick={()=> displayProjects('load')} style={{backgroundColor: '#CD5FF8', display: `${total>projects.length?'block':'none'}`}} className='mt-10 text-white'>Load more</button>
+                </div>
+                </>
+                
             </div>
             <Footer />
         </div>

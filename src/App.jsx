@@ -16,7 +16,11 @@ import Loader from './Loader/Loader.jsx';
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    if(isLoading) {
+      document.body.classList.add('overflow-hidden')
+    }
     const timer = setTimeout(() => {
+      document.body.classList.remove('overflow-hidden')
       setIsLoading(false);
     }, 2000);
 
